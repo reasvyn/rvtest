@@ -1,0 +1,17 @@
+[package]
+name = "rutest"
+version = "0.0.0"
+edition = "2024"
+description = "A next-level testing framework for Rust — BDD specs, property-based testing, parametrized tests, rich reporting, and code coverage"
+license = "MIT"
+
+[[bin]]
+name = "cargo-rutest"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+libc = "0.2"
+rand = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
