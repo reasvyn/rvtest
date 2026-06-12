@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2024"
 description = "A next-level testing framework for Rust — BDD specs, property-based testing, parametrized tests, rich reporting, and code coverage"
 license = "MIT"
+repository = "https://github.com/reasvyn/rutest"
+homepage = "https://github.com/reasvyn/rutest"
+documentation = "https://docs.rs/rutest"
 
 [[bin]]
 name = "cargo-rutest"
