@@ -1,11 +1,12 @@
-use std::io::{self, IsTerminal, Write};
-use std::path::PathBuf;
+use std::io::{self, IsTerminal, Read, Write};
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime};
 
 use clap::Parser;
+use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 
 use rvtest::core::{CoverageFormat, ReportFormat, TestCase, TestRun, TestStatus, TestSuite};
 use rvtest::coverage::{CoverageCollector, CoverageConfig};
@@ -67,6 +68,11 @@ struct Cli {
     /// Show verbose output (list all tests).
     #[arg(short = 'v', long = "verbose")]
     verbose: bool,
+
+    // === Watch mode ===
+    /// Re-run tests automatically when source files change.
+    #[arg(long = "watch")]
+    watch: bool,
 
     // === Snapshot options ===
     /// Update all snapshots to match current output.
@@ -142,6 +148,15 @@ fn main() {
     // === Snapshot config ===
     if args.update_all {
         rvtest::snapshot::set_update_all(true);
+    }
+
+    // === Watch mode ===
+    if args.watch {
+        let filter = args.filter.clone();
+        let format = args.format.clone();
+        let verbose = args.verbose;
+        watch_loop(filter, format, verbose);
+        return;
     }
 
     // === Test mode ===
@@ -316,6 +331,112 @@ fn parse_cargo_test_output(stdout: &str) -> Vec<TestSuite> {
         tests,
         duration: Duration::ZERO,
     }]
+}
+
+// ---------------------------------------------------------------------------
+// Watch mode
+// ---------------------------------------------------------------------------
+
+fn watch_loop(filter: Option<String>, format_str: String, verbose: bool) {
+    let done = Arc::new(AtomicBool::new(false));
+    let format: ReportFormat = format_str.parse().unwrap_or(ReportFormat::Pretty);
+
+    // Build watcher for src/ and tests/.
+    let (tx, rx) = std::sync::mpsc::channel::<Result<Event, notify::Error>>();
+    let mut watcher = match RecommendedWatcher::new(tx, Config::default()) {
+        Ok(w) => w,
+        Err(e) => {
+            eprintln!("Error: cannot start file watcher: {e}");
+            std::process::exit(1);
+        }
+    };
+    for dir in &["src", "tests"] {
+        if Path::new(dir).exists() {
+            let _ = watcher.watch(Path::new(dir), RecursiveMode::Recursive);
+        }
+    }
+
+    // Initial run.
+    run_and_print(&filter, &format, verbose);
+    eprint!("  Watching src/, tests/ for changes... press 'q' to quit.\n\n");
+
+    // Register Ctrl-C handler via libc.
+    #[cfg(unix)]
+    {
+        unsafe {
+            libc::signal(libc::SIGINT, sigint_handler as *const () as libc::sighandler_t);
+        }
+    }
+
+    let debounce = Duration::from_millis(300);
+    let mut pending = false;
+
+    loop {
+        if done.load(Ordering::SeqCst) {
+            break;
+        }
+
+        // Collect events within debounce window.
+        let deadline = Instant::now() + debounce;
+        while Instant::now() < deadline && !done.load(Ordering::SeqCst) {
+            match rx.recv_timeout(Duration::from_millis(50)) {
+                Ok(Ok(_)) => pending = true,
+                Ok(Err(_)) => {}
+                Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {}
+                Err(std::sync::mpsc::RecvTimeoutError::Disconnected) => break,
+            }
+        }
+
+        // Check for 'q' keypress (non-blocking on Unix).
+        #[cfg(unix)]
+        if !done.load(Ordering::SeqCst) && check_quit_key() {
+            eprintln!("Quitting.");
+            break;
+        }
+
+        if !pending && !done.load(Ordering::SeqCst) {
+            std::thread::sleep(Duration::from_millis(100));
+            continue;
+        }
+
+        pending = false;
+
+        if done.load(Ordering::SeqCst) {
+            break;
+        }
+
+        eprintln!("  Change detected — re-running tests...\n");
+        run_and_print(&filter, &format, verbose);
+        eprint!("\n  Watching... press 'q' to quit.\n\n");
+    }
+}
+
+#[cfg(unix)]
+unsafe extern "C" fn sigint_handler(_: libc::c_int) {
+    // Default Ctrl-C handling — process will terminate.
+}
+
+fn run_and_print(filter: &Option<String>, format: &ReportFormat, verbose: bool) {
+    let run = run_cargo_test(filter.as_deref());
+    let report = render(format, verbose, &run);
+    println!("{report}");
+}
+
+#[cfg(unix)]
+fn check_quit_key() -> bool {
+    use std::os::fd::AsRawFd;
+    let fd = io::stdin().as_raw_fd();
+    let mut fds: libc::fd_set = unsafe { std::mem::zeroed() };
+    unsafe { libc::FD_SET(fd, &mut fds) };
+    let mut tv = libc::timeval { tv_sec: 0, tv_usec: 0 };
+    let ret = unsafe { libc::select(fd + 1, &mut fds, std::ptr::null_mut(), std::ptr::null_mut(), &mut tv) };
+    if ret > 0 {
+        let mut buf = [0u8; 1];
+        if io::stdin().read_exact(&mut buf).is_ok() && (buf[0] == b'q' || buf[0] == b'Q') {
+            return true;
+        }
+    }
+    false
 }
 
 fn render(format: &ReportFormat, verbose: bool, run: &TestRun) -> String {

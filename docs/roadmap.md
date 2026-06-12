@@ -228,7 +228,7 @@ fn watch_loop(config: RunnerConfig) {
 }
 ```
 
-**Status:** Not started.
+**Status:** 🟢 Built on `main`.  `cargo rvtest --watch` re-runs tests when files in `src/` or `tests/` change.  Uses `notify` for file watching, 300ms debounce, press `q` to quit.  Pending release.
 
 ---
 
