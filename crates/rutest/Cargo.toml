@@ -1,6 +1,6 @@
 [package]
 name = "rutest"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2024"
 description = "A next-level testing framework for Rust — BDD specs, property-based testing, parametrized tests, rich reporting, and code coverage"
 license = "MIT"
