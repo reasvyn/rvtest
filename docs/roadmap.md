@@ -13,9 +13,6 @@ arrives.
 
 - BDD-style specs (`describe` / `it`, nesting, hooks, tags,
   timeouts, retries)
-- **Proc-macro API** (`#[describe]` / `#[it]` / `#[tag]` / `#[timeout]` /
-  `#[retries]` / `#[before_all]` / `#[after_all]`) — optional `macros`
-  feature
 - Property-based testing (`check`, `Strategy` trait, `any`, vec/map/filter combinators, shrinking)
 - Parametrized tests (`parametrize`, `parametrize_named`)
 - Reporting: Pretty (colourised), TAP, JUnit XML, JSON, Compact
@@ -87,7 +84,7 @@ mod calculator {
 - Better IDE support (one `#[test]` per spec module instead of one
   per test)
 
-**Status:** ✅ Shipped (v0.1.0).  `rvtest-macros` crate with `#[describe]` / `#[it]` / `#[tag]` / `#[timeout]` / `#[retries]` / `#[before_all]` / `#[after_all]`.  Optional `macros` feature on `rvtest` re-exports everything.  Nested `#[describe]` blocks supported, non-macro items preserved.  Dogfooded tests pass.
+**Status:** 🟢 Built on `main` — `rvtest-macros` crate with `#[describe]` / `#[it]` / `#[tag]` / `#[timeout]` / `#[retries]` / `#[before_all]` / `#[after_all]`.  Optional `macros` feature on `rvtest`.  Nested `#[describe]` blocks supported, non-macro items preserved.  Dogfooded tests pass.  Pending release as v0.2.0.
 
 ---
 
@@ -388,5 +385,5 @@ the design.
 |---|---|
 | 🔴 Not started | No work done yet. |
 | 🟡 In design | API sketch exists, implementation pending. |
-| 🟢 Prototype | Working proof of concept in a branch. |
+| 🟢 Built, unreleased | Working code on `main`, not yet on crates.io. |
 | ✅ Stable | Shipped in the latest release. |
