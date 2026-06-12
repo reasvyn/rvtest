@@ -23,7 +23,7 @@ Start with the documentation in the `docs/` directory:
 ## Commercial Support
 
 For commercial support or consulting, contact the maintainer at
-**reasvyn@pm.me**.
+**reasvyn@gmail.com**.
 
 ## Security Issues
 

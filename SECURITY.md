@@ -6,7 +6,7 @@ If you discover a security vulnerability in `rvtest`, please do **not**
 open a public issue.  Instead, send a private report to the maintainer
 via one of the following channels:
 
-- **Email:** reasvyn@pm.me
+- **Email:** reasvyn@gmail.com
 - **GitHub Security Advisory:** https://github.com/reasvyn/rvtest/security/advisories/new
 
 You should receive a response within **48 hours**.  If you do not

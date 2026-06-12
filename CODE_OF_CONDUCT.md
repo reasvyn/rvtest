@@ -49,7 +49,7 @@ in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behaviour
-may be reported to the project maintainer at **reasvyn@pm.me**.
+may be reported to the project maintainer at **reasvyn@gmail.com**.
 All complaints will be reviewed and investigated promptly and fairly.
 
 ## Enforcement Guidelines
