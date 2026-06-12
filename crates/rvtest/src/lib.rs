@@ -76,6 +76,7 @@
 //! The `cargo-rvtest` binary runs specs defined in your project and
 //! produces formatted output. See `cargo rvtest --help`.
 
+pub mod arch;
 pub mod core;
 pub mod coverage;
 pub mod coverage_raw;
@@ -98,7 +99,7 @@ pub mod tag;
 /// Then use:
 ///
 /// ```ignore
-/// use rvtest::describe;
+/// use rvtest::*;
 /// ```
 #[cfg(feature = "macros")]
 pub use rvtest_macros::{after_all, before_all, describe, it, retries, tag, timeout};
@@ -106,10 +107,14 @@ pub use rvtest_macros::{after_all, before_all, describe, it, retries, tag, timeo
 /// The `prelude` module re-exports the most commonly used types and
 /// functions for convenience.
 pub mod prelude {
+    pub use crate::arch::{arch_check, ArchCheck};
     pub use crate::core::{CoverageFormat, CoverageReport, ReportFormat, RunnerConfig, TestRun, TestStatus, TestSuite};
     pub use crate::coverage::{CoverageCollector, CoverageConfig};
     pub use crate::param::{parametrize, parametrize_named};
     pub use crate::property::{any, check, check_with, PropertyConfig, Strategy};
     pub use crate::runner::TestRunner;
+    #[cfg(feature = "macros")]
+    pub use rvtest_macros::{after_all, before_all, describe, it, retries, tag, timeout};
+    #[cfg(not(feature = "macros"))]
     pub use crate::spec::{describe, Spec};
 }

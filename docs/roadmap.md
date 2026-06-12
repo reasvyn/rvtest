@@ -88,7 +88,57 @@ mod calculator {
 
 ---
 
-#### 2. Snapshot Testing
+#### 2. Arch Tests
+
+**Goal:** Declarative architecture-enforcement tests that verify
+module dependencies, visibility constraints, and layering rules
+directly inside `rvtest` specs — no external linters required.
+
+**Design sketch:**
+
+```rust
+use rvtest::arch::*;
+
+#[test]
+fn architecture() {
+    arch_check()
+        .module("core").may_not_depend_on("coverage", "report")
+        .module("spec").may_depend_on("core", "tag")
+        .module("runner").may_depend_on("core", "report", "spec")
+        .all_modules().must_not_have_cycles()
+        .assert_all_pass();
+}
+```
+
+**How it works:**
+
+- Scans `src/` for `.rs` files, parses `mod` declarations and `use`
+  statements using lightweight text analysis (no `syn` dependency).
+- Builds a directed dependency graph between modules.
+- Checks each declared rule against the actual graph.
+- Reports any violation with the offending import path.
+
+**Built-in rules:**
+
+| Rule | Description |
+|---|---|
+| `may_depend_on(...)` | Module can only depend on listed peers |
+| `may_not_depend_on(...)` | Module cannot depend on listed peers |
+| `must_not_have_cycles()` | No circular dependencies anywhere |
+| `public_api(doc_required)` | Public items must have doc comments |
+
+**Integration:**
+
+- `rvtest::arch` module with `ArchCheck` builder and `Rule` types.
+- `arch_check()` → `.module(...)`.rule...`.assert_all_pass()`.
+- Works inside `#[test]` or `#[describe]` blocks.
+- Violations rendered in the same failure format as spec tests.
+
+**Status:** 🟢 Built on `main`.  `rvtest::arch` module with `arch_check()` builder, `may_depend_on` / `may_not_depend_on` / `must_not_have_cycles` rules.  Scans `src/` for `.rs` files, builds dependency graph, checks constraints.  Dogfooded test enforces rvtest's own module layering.  Pending release.
+
+---
+
+#### 3. Snapshot Testing
 
 **Goal:** File-based snapshot assertions with automatic review
 and update workflow, similar to `insta` but natively integrated
@@ -137,7 +187,7 @@ mod api {
 
 ---
 
-#### 3. Watch Mode
+#### 4. Watch Mode
 
 **Goal:** Re-run tests automatically when source files change.
 
@@ -182,7 +232,7 @@ fn watch_loop(config: RunnerConfig) {
 
 ---
 
-#### 4. GitHub Actions Annotations Reporter
+#### 5. GitHub Actions Annotations Reporter
 
 **Goal:** Produce GitHub Actions-compatible error annotations
 from test failures.  This makes `cargo rvtest` drop-in ready for
