@@ -83,7 +83,8 @@ impl TestRunner {
             ReportFormat::Tap => Box::new(report::TapReporter),
             ReportFormat::Junit => Box::new(report::JunitReporter::new()),
             ReportFormat::Json => Box::new(report::JsonReporter),
-            ReportFormat::Compact => Box::new(report::CompactReporter),
+        ReportFormat::Compact => Box::new(report::CompactReporter),
+        ReportFormat::Github => Box::new(report::GithubReporter),
         };
         reporter.report(run)
     }
@@ -116,6 +117,7 @@ fn render_report_with_config(config: &RunnerConfig, run: &TestRun) -> String {
         ReportFormat::Junit => Box::new(report::JunitReporter::new()),
         ReportFormat::Json => Box::new(report::JsonReporter),
         ReportFormat::Compact => Box::new(report::CompactReporter),
+        ReportFormat::Github => Box::new(report::GithubReporter),
     };
     reporter.report(run)
 }

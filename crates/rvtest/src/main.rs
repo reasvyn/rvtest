@@ -457,6 +457,7 @@ fn render(format: &ReportFormat, verbose: bool, run: &TestRun) -> String {
         ReportFormat::Junit => Box::new(report::JunitReporter::new()),
         ReportFormat::Json => Box::new(report::JsonReporter),
         ReportFormat::Compact => Box::new(report::CompactReporter),
+        ReportFormat::Github => Box::new(report::GithubReporter),
     };
     reporter.report(run)
 }

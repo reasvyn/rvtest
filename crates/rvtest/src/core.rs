@@ -280,6 +280,8 @@ pub enum ReportFormat {
     Json,
     /// Compact single-line-per-test output.
     Compact,
+    /// GitHub Actions annotations.
+    Github,
 }
 
 impl std::str::FromStr for ReportFormat {
@@ -292,6 +294,7 @@ impl std::str::FromStr for ReportFormat {
             "junit" | "xml" => Ok(Self::Junit),
             "json" => Ok(Self::Json),
             "compact" => Ok(Self::Compact),
+            "github" | "gh" => Ok(Self::Github),
             _ => Err(format!("unknown report format: {s}")),
         }
     }

@@ -258,7 +258,7 @@ cargo rvtest -F github
 - Include the source location (file, line) when available
 - Fall back to `compact` reporter format for the summary
 
-**Status:** Not started.
+**Status:** 🟢 Built on `main`.  `GithubReporter` — emits `::error` annotations for each failed/timed-out test with file, line, and message.  `cargo rvtest -F github` (or `-F gh`).  Pending release.
 
 ---
 

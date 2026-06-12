@@ -6,7 +6,7 @@ use std::time::Duration;
 use rvtest::core::{RunnerConfig, TestRun};
 use rvtest::param::{parametrize, parametrize_named};
 use rvtest::property::{any, check};
-use rvtest::report::{CompactReporter, JsonReporter, PrettyReporter, TapReporter, TestReporter};
+use rvtest::report::{CompactReporter, GithubReporter, JsonReporter, PrettyReporter, TapReporter, TestReporter};
 use rvtest::runner::TestRunner;
 use rvtest::spec::describe;
 
@@ -225,6 +225,10 @@ fn rvtest_reporters() {
             let report = JsonReporter.report(&TestRun::new());
             assert!(report.contains(r#""success":true"#));
             assert!(report.contains(r#""suites":["#));
+        })
+        .it("github reporter shows zero failures", || {
+            let report = GithubReporter.report(&TestRun::new());
+            assert!(report.contains("0/0 passed"));
         })
         .tag("report")
         .run()
