@@ -84,6 +84,7 @@ pub mod param;
 pub mod property;
 pub mod report;
 pub mod runner;
+pub mod snapshot;
 pub mod spec;
 pub mod tag;
 
@@ -113,6 +114,7 @@ pub mod prelude {
     pub use crate::param::{parametrize, parametrize_named};
     pub use crate::property::{any, check, check_with, PropertyConfig, Strategy};
     pub use crate::runner::TestRunner;
+    pub use crate::snapshot::{assert_snapshot, assert_snapshot_in};
     #[cfg(feature = "macros")]
     pub use rvtest_macros::{after_all, before_all, describe, it, retries, tag, timeout};
     #[cfg(not(feature = "macros"))]

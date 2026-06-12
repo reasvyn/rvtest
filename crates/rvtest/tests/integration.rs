@@ -159,6 +159,52 @@ fn rvtest_architecture() {
 }
 
 #[test]
+fn rvtest_snapshot_create_and_match() {
+    use rvtest::snapshot::{assert_snapshot, set_snapshot_dir, set_update_all};
+
+    // Use a temp directory for snapshots.
+    let tmp = std::env::temp_dir().join("rvtest_snap_test");
+    let _ = std::fs::remove_dir_all(&tmp);
+    set_snapshot_dir(&tmp);
+    set_update_all(true); // auto-create snapshots
+
+    // First: create the snapshot (update mode → no panic, just creates).
+    assert_snapshot("hello", &"Hello, world!");
+
+    set_update_all(false);
+
+    // Second: verify matching content passes.
+    assert_snapshot("hello", &"Hello, world!");
+
+    // Clean up.
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
+fn rvtest_snapshot_mismatch_detected() {
+    use rvtest::snapshot::{assert_snapshot, set_snapshot_dir, set_update_all};
+
+    let tmp = std::env::temp_dir().join("rvtest_snap_mismatch");
+    let _ = std::fs::remove_dir_all(&tmp);
+    set_snapshot_dir(&tmp);
+    set_update_all(true);
+
+    // Create initial snapshot.
+    assert_snapshot("mismatch_test", &"original value");
+
+    set_update_all(false);
+
+    // Now provide different content — should fail.
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        assert_snapshot("mismatch_test", &"different value");
+    }));
+    assert!(result.is_err(), "snapshot mismatch should panic");
+
+    // Clean up.
+    let _ = std::fs::remove_dir_all(&tmp);
+}
+
+#[test]
 fn rvtest_reporters() {
     describe("Reporters")
         .it("pretty reporter shows summary", || {

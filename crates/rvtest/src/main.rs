@@ -68,6 +68,15 @@ struct Cli {
     #[arg(short = 'v', long = "verbose")]
     verbose: bool,
 
+    // === Snapshot options ===
+    /// Update all snapshots to match current output.
+    #[arg(long = "update-all")]
+    update_all: bool,
+
+    /// Review pending snapshots interactively.
+    #[arg(long = "review")]
+    review: bool,
+
     // === Coverage options ===
     /// Enable code coverage collection via LLVM instrumentation.
     #[arg(long = "coverage")]
@@ -128,6 +137,11 @@ fn main() {
                 std::process::exit(1);
             }
         }
+    }
+
+    // === Snapshot config ===
+    if args.update_all {
+        rvtest::snapshot::set_update_all(true);
     }
 
     // === Test mode ===

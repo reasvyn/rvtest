@@ -178,12 +178,12 @@ mod api {
 
 **Integration points:**
 
-- `rvtest::snapshot` module with `assert_snapshot!` macro
+- `rvtest::snapshot` module with `assert_snapshot` function
 - New CLI flags: `--review`, `--update-all`
 - Reporter support: include snapshot diffs in failure output
 - JUnit reporter: append snapshot diff as `<system-out>` CDATA
 
-**Status:** Not started.
+**Status:** 🟢 Built on `main`.  `rvtest::snapshot` module with `assert_snapshot()` / `assert_snapshot_in()`.  `--update-all` flag auto-accepts new/updated snapshots.  Mismatch detection with line-diff output.  Dogfooded tests pass.  Pending release.
 
 ---
 
