@@ -106,7 +106,18 @@ struct Cli {
 }
 
 fn main() {
-    let args = Cli::parse();
+    // Skip the subcommand name when invoked via `cargo rvtest`.
+    // Cargo always passes the subcommand name as argv[1].
+    let args: Vec<String> = std::env::args().collect();
+    let raw_args: Vec<String> = if args.len() > 1 && args[1] == "rvtest" {
+        let mut a = vec![args[0].clone()];
+        a.extend_from_slice(&args[2..]);
+        a
+    } else {
+        args
+    };
+
+    let args = Cli::parse_from(raw_args);
 
     // === Coverage mode ===
     if args.coverage || args.coverage_open {
