@@ -215,8 +215,19 @@ dependencies = [
  "clap",
  "libc",
  "rand",
+ "rvtest-macros",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "rvtest-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "rvtest",
+ "syn",
 ]
 
 [[package]]

@@ -1,0 +1,20 @@
+[package]
+name = "rvtest-macros"
+version = "0.1.0"
+edition = "2024"
+description = "Proc-macros for rvtest — A Next Level Testing Framework for Rust"
+license = "MIT"
+repository = "https://github.com/reasvyn/rvtest"
+homepage = "https://github.com/reasvyn/rvtest"
+documentation = "https://docs.rs/rvtest-macros"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = "1"
+proc-macro2 = "1"
+
+[dev-dependencies]
+rvtest = { path = "../rvtest", features = ["macros"] }

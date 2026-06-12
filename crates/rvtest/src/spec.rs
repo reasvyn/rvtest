@@ -143,7 +143,7 @@ impl Spec {
         let child_index = self.children.len();
         let child = Spec::new(name);
         self.children.push(child);
-        SpecBuilder { parent: self, child_index }
+        SpecBuilder { parent: self, path: vec![child_index] }
     }
 
     fn collect_tests(
@@ -253,12 +253,18 @@ impl Spec {
 /// returning to the parent.
 pub struct SpecBuilder {
     parent: Spec,
-    child_index: usize,
+    /// Path of indices from `parent` to the current child.
+    /// Empty = at parent level (never happens); `[0]` = first child of parent.
+    path: Vec<usize>,
 }
 
 impl SpecBuilder {
     fn child_mut(&mut self) -> &mut Spec {
-        &mut self.parent.children[self.child_index]
+        let mut current = &mut self.parent;
+        for &idx in &self.path {
+            current = &mut current.children[idx];
+        }
+        current
     }
 
     /// Attach a description to the child spec.
@@ -312,7 +318,9 @@ impl SpecBuilder {
         let child = Spec::new(name);
         self.child_mut().children.push(child);
         let child_index = self.child_mut().children.len() - 1;
-        SpecBuilder { parent: self.parent, child_index }
+        let mut path = self.path;
+        path.push(child_index);
+        SpecBuilder { parent: self.parent, path }
     }
 
     /// Run all tests starting from the parent spec.

@@ -18,3 +18,8 @@ libc = "0.2"
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+rvtest-macros = { path = "../rvtest-macros", optional = true }
+
+[features]
+default = []
+macros = ["rvtest-macros"]

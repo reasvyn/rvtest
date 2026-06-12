@@ -86,6 +86,23 @@ pub mod runner;
 pub mod spec;
 pub mod tag;
 
+/// Re-export of the optional proc-macro crate.
+///
+/// Enabled via the `macros` feature:
+///
+/// ```toml
+/// [dependencies]
+/// rvtest = { version = "0.1", features = ["macros"] }
+/// ```
+///
+/// Then use:
+///
+/// ```ignore
+/// use rvtest::describe;
+/// ```
+#[cfg(feature = "macros")]
+pub use rvtest_macros::{after_all, before_all, describe, it, retries, tag, timeout};
+
 /// The `prelude` module re-exports the most commonly used types and
 /// functions for convenience.
 pub mod prelude {
