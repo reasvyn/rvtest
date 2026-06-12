@@ -13,9 +13,9 @@ use crate::spec::Spec;
 /// # Example
 ///
 /// ```ignore
-/// use rutest::runner::TestRunner;
-/// use rutest::spec::describe;
-/// use rutest::core::RunnerConfig;
+/// use rvtest::runner::TestRunner;
+/// use rvtest::spec::describe;
+/// use rvtest::core::RunnerConfig;
 ///
 /// let runner = TestRunner::new(RunnerConfig::default())
 ///     .add_spec(describe("Math")

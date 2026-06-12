@@ -220,7 +220,7 @@ pub struct JunitReporter {
 impl JunitReporter {
     /// Create a new `JunitReporter`.
     pub fn new() -> Self {
-        JunitReporter { suite_name: "rutest".to_owned() }
+        JunitReporter { suite_name: "rvtest".to_owned() }
     }
 
     /// Override the top-level suite name in the XML output.

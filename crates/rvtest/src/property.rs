@@ -76,7 +76,7 @@ impl Strategy<bool> for RangeStrategy<bool> {
 /// # Example
 ///
 /// ```ignore
-/// use rutest::property::{check, any};
+/// use rvtest::property::{check, any};
 ///
 /// check("addition is commutative", any::<i32>(), |v: &i32| true);
 /// ```
@@ -318,7 +318,7 @@ impl Default for PropertyConfig {
 /// # Example
 ///
 /// ```ignore
-/// use rutest::property::{check, any};
+/// use rvtest::property::{check, any};
 ///
 /// check("reversal is involutive", any::<Vec<i32>>(), |v: &Vec<i32>| {
 ///     let rev: Vec<_> = v.iter().rev().copied().collect();

@@ -7,18 +7,19 @@ use std::time::{Duration, Instant, SystemTime};
 
 use clap::Parser;
 
-use rutest::core::{CoverageFormat, ReportFormat, TestCase, TestRun, TestStatus, TestSuite};
-use rutest::coverage::{CoverageCollector, CoverageConfig};
-use rutest::report::{self, TestReporter};
+use rvtest::core::{CoverageFormat, ReportFormat, TestCase, TestRun, TestStatus, TestSuite};
+use rvtest::coverage::{CoverageCollector, CoverageConfig};
+use rvtest::report::{self, TestReporter};
 
 #[derive(Parser)]
 #[command(
-    name = "cargo-rutest",
-    about = "A next-level testing framework for Rust",
+    name = "cargo-rvtest",
+    about = "A Next Level Testing Framework for Rust",
     version,
-    long_about = "rutest extends Rust's built-in testing with BDD specs, \
+    long_about = "rvtest is A Next Level Testing Framework for Rust.\n\n\
+                   rvtest extends Rust's built-in testing with BDD specs, \
                    property-based testing, parametrized tests, and rich reporting. \
-                   Use `cargo rutest` to run tests or `cargo rutest --coverage` \
+                   Use `cargo rvtest` to run tests or `cargo rvtest --coverage` \
                    for code coverage analysis."
 )]
 struct Cli {

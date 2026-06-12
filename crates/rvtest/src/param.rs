@@ -13,7 +13,7 @@ use crate::core::{TestCase, TestStatus};
 /// # Example
 ///
 /// ```ignore
-/// use rutest::param::parametrize;
+/// use rvtest::param::parametrize;
 ///
 /// let cases = parametrize("addition", vec![
 ///     (1, 2, 3),
@@ -76,7 +76,7 @@ where
 /// # Example
 ///
 /// ```ignore
-/// use rutest::param::parametrize_named;
+/// use rvtest::param::parametrize_named;
 ///
 /// let cases = parametrize_named("parse", vec![
 ///     ("empty", ""),

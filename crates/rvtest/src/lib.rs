@@ -1,6 +1,6 @@
-//! **rutest** — a next-level testing framework for Rust.
+//! **rvtest** — A Next Level Testing Framework for Rust.
 //!
-//! `rutest` extends Rust's built-in testing capabilities with:
+//! `rvtest` extends Rust's built-in testing capabilities with:
 //!
 //! - **BDD-style specs** — organise tests with `describe` / `it` blocks,
 //!   nested hierarchies, tags, timeouts, and retries.
@@ -11,18 +11,18 @@
 //! - **Rich reporting** — Pretty (human-readable with colour), TAP, JUnit
 //!   XML, JSON, and Compact formats.
 //! - **Code coverage** — measure line/function/region coverage via LLVM
-//!   instrumentation (`cargo rutest --coverage`).
+//!   instrumentation (`cargo rvtest --coverage`).
 //! - **Configurable runner** — parallel execution, name and tag filtering,
 //!   fail-fast, configurable timeouts and retries.
 //!
 //! # Usage inside `#[test]` (recommended)
 //!
-//! Rutest is designed to be used inside standard `#[test]` functions.
+//! Rvtest is designed to be used inside standard `#[test]` functions.
 //! Build a spec with [`describe`] and [`it`](spec::Spec::it), call
 //! [`run`](spec::Spec::run), then verify with [`assert_all_pass`](core::TestSuite::assert_all_pass):
 //!
 //! ```ignore
-//! use rutest::spec::describe;
+//! use rvtest::spec::describe;
 //!
 //! #[test]
 //! fn calculator_tests() {
@@ -45,7 +45,7 @@
 //! # Property-based testing inside `#[test]`
 //!
 //! ```ignore
-//! use rutest::property::{check, any};
+//! use rvtest::property::{check, any};
 //!
 //! #[test]
 //! fn addition_is_commutative() {
@@ -59,7 +59,7 @@
 //! # Parametrized tests inside `#[test]`
 //!
 //! ```ignore
-//! use rutest::param::parametrize;
+//! use rvtest::param::parametrize;
 //!
 //! #[test]
 //! fn addition_cases() {
@@ -71,10 +71,10 @@
 //! }
 //! ```
 //!
-//! # CLI usage (`cargo rutest`)
+//! # CLI usage (`cargo rvtest`)
 //!
-//! The `cargo-rutest` binary runs specs defined in your project and
-//! produces formatted output. See `cargo rutest --help`.
+//! The `cargo-rvtest` binary runs specs defined in your project and
+//! produces formatted output. See `cargo rvtest --help`.
 
 pub mod core;
 pub mod coverage;

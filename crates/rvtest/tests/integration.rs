@@ -3,15 +3,15 @@ use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use rutest::core::{RunnerConfig, TestRun};
-use rutest::param::{parametrize, parametrize_named};
-use rutest::property::{any, check};
-use rutest::report::{CompactReporter, JsonReporter, PrettyReporter, TapReporter, TestReporter};
-use rutest::runner::TestRunner;
-use rutest::spec::describe;
+use rvtest::core::{RunnerConfig, TestRun};
+use rvtest::param::{parametrize, parametrize_named};
+use rvtest::property::{any, check};
+use rvtest::report::{CompactReporter, JsonReporter, PrettyReporter, TapReporter, TestReporter};
+use rvtest::runner::TestRunner;
+use rvtest::spec::describe;
 
 #[test]
-fn rutest_spec() {
+fn rvtest_spec() {
     describe("Spec")
         .describe("execution")
             .it("passes when all tests pass", || {
@@ -70,7 +70,7 @@ fn rutest_spec() {
 }
 
 #[test]
-fn rutest_parametrized() {
+fn rvtest_parametrized() {
     describe("Parametrized")
         .it("runs all cases", || {
             let results = parametrize("add", [(1, 1, 2), (0, 0, 0), (-1, 1, 0)], |(a, b, exp)| {
@@ -97,7 +97,7 @@ fn rutest_parametrized() {
 }
 
 #[test]
-fn rutest_property() {
+fn rvtest_property() {
     describe("Property")
         .it("passes for valid properties", || {
             check(
@@ -122,7 +122,7 @@ fn rutest_property() {
 }
 
 #[test]
-fn rutest_runner() {
+fn rvtest_runner() {
     describe("Runner")
         .it("executes specs with custom config", || {
             let config = RunnerConfig {
@@ -144,7 +144,7 @@ fn rutest_runner() {
 }
 
 #[test]
-fn rutest_reporters() {
+fn rvtest_reporters() {
     describe("Reporters")
         .it("pretty reporter shows summary", || {
             let report = PrettyReporter::new(false).colour(false).report(&TestRun::new());

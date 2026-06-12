@@ -25,7 +25,7 @@ macro_rules! source_location {
 /// # Example inside `#[test]` (recommended)
 ///
 /// ```ignore
-/// use rutest::spec::describe;
+/// use rvtest::spec::describe;
 ///
 /// #[test]
 /// fn my_tests() {

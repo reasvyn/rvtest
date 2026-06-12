@@ -1,0 +1,20 @@
+[package]
+name = "rvtest"
+version = "0.1.0"
+edition = "2024"
+description = "A Next Level Testing Framework for Rust — BDD specs, property-based testing, parametrized tests, rich reporting, and code coverage"
+license = "MIT"
+repository = "https://github.com/reasvyn/rvtest"
+homepage = "https://github.com/reasvyn/rvtest"
+documentation = "https://docs.rs/rvtest"
+
+[[bin]]
+name = "cargo-rvtest"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+libc = "0.2"
+rand = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
