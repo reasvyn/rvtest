@@ -74,6 +74,12 @@ struct Cli {
     #[arg(long = "watch")]
     watch: bool,
 
+    // === Flaky detection ===
+    /// Detect flaky tests by running the suite multiple times.
+    /// Optionally specify the number of runs: --detect-flaky=20 (default 10).
+    #[arg(long = "detect-flaky", default_missing_value = "10", num_args = 0..=1, require_equals = false, default_value = "0")]
+    detect_flaky: u32,
+
     // === Snapshot options ===
     /// Update all snapshots to match current output.
     #[arg(long = "update-all")]
@@ -167,6 +173,15 @@ fn main() {
         let format = args.format.clone();
         let verbose = args.verbose;
         watch_loop(filter, format, verbose);
+        return;
+    }
+
+    // === Flaky detection ===
+    if args.detect_flaky > 0 {
+        let filter = args.filter.clone();
+        let n = args.detect_flaky;
+        let verbose = args.verbose;
+        detect_flaky(filter, n, verbose);
         return;
     }
 
@@ -425,6 +440,65 @@ fn watch_loop(filter: Option<String>, format_str: String, verbose: bool) {
 #[cfg(unix)]
 unsafe extern "C" fn sigint_handler(_: libc::c_int) {
     // Default Ctrl-C handling — process will terminate.
+}
+
+/// Run `cargo test` N times and report which tests are flaky.
+fn detect_flaky(filter: Option<String>, num_runs: u32, verbose: bool) {
+    use std::collections::HashMap;
+
+    eprintln!("\n  🔍 Running test suite {num_runs} times to detect flaky tests...\n");
+
+    let mut results: HashMap<String, (u32, u32)> = HashMap::new(); // name → (passes, total)
+
+    for run in 1..=num_runs {
+        if verbose {
+            eprint!("  Run {run}/{num_runs}... ");
+        }
+
+        let test_run = run_cargo_test(filter.as_deref());
+
+        for suite in &test_run.suites {
+            for test in &suite.tests {
+                // Only track tests that actually ran (ignore skipped/ignored).
+                if test.status.is_skipped() {
+                    continue;
+                }
+                let entry = results.entry(test.name.clone()).or_insert((0, 0));
+                entry.1 += 1; // total
+                if test.status.is_passed() {
+                    entry.0 += 1; // passes
+                }
+            }
+        }
+
+        if verbose {
+            let passed = test_run.total_passed();
+            let failed = test_run.total_failed();
+            eprintln!("{passed} passed, {failed} failed");
+        }
+    }
+
+    // Report flaky tests.
+    eprintln!();
+    let mut flaky_found = false;
+
+    let mut sorted: Vec<_> = results.into_iter().collect();
+    sorted.sort_by(|a, b| a.0.cmp(&b.0));
+
+    for (name, (passes, total)) in &sorted {
+        let rate = *passes as f64 / *total as f64 * 100.0;
+        if rate < 100.0 {
+            flaky_found = true;
+            eprintln!(
+                "  ⚠  {name:<60} {passes}/{total} passes ({rate:.0}%)"
+            );
+        }
+    }
+
+    if !flaky_found {
+        eprintln!("  ✅ No flaky tests detected — every test passed on all {num_runs} runs.");
+    }
+    eprintln!();
 }
 
 fn run_and_print(filter: &Option<String>, format: &ReportFormat, verbose: bool) {

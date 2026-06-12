@@ -262,7 +262,7 @@ cargo rvtest -F github
 
 ---
 
-#### 5. Flaky Test Detection
+#### 6. Flaky Test Detection
 
 **Goal:** Automatically identify flaky tests (tests that
 non-deterministically pass and fail).
@@ -289,11 +289,11 @@ cargo rvtest --detect-flaky
 - The `--retries` flag already handles retrying — flaky detection
   extends this idea to detection across runs
 
-**Status:** Not started.
+**Status:** 🟢 Built on `main`.  `cargo rvtest --detect-flaky` (default 10 runs, configurable via `--detect-flaky=N`).  Aggregates results across runs, reports pass-rate per flaky test, skips ignored/skipped tests.  Pending release.
 
 ---
 
-#### 6. Slow Test Profiling
+#### 7. Slow Test Profiling
 
 **Goal:** Automatically surface the slowest tests in the suite.
 
@@ -323,7 +323,7 @@ cargo rvtest --profile-slow
 
 ---
 
-#### 7. Comprehensive Assertion Macros
+#### 8. Comprehensive Assertion Macros
 
 **Goal:** Provide a rich set of assertion macros with automatic
 diff output, similar to `pretty_assertions` but integrated into
@@ -361,7 +361,7 @@ Or, for complex types, a coloured side-by-side diff.
 
 ---
 
-#### 8. Output Capture Per Test
+#### 9. Output Capture Per Test
 
 **Goal:** Capture stdout/stderr per test case and show it only
 on failure, avoiding the noisy `--nocapture` problem.
