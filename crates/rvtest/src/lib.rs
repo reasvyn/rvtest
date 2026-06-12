@@ -33,14 +33,15 @@
 //!         .it("subtracts", || {
 //!             assert_eq!(5 - 3, 2);
 //!         })
+//!         // Attach tags for filtering — handy once you have many specs
 //!         .tag("arithmetic")
 //!         .run()
 //!         .assert_all_pass();
 //! }
 //! ```
 //!
-//! If any spec fails, `assert_all_pass` will panic with a detailed report,
-//! which causes the `#[test]` to fail naturally — no need for `main()`.
+//! Tags let you selectively run tests: `cargo rvtest --tag arithmetic`.
+//! Other modifiers include `.timeout(dur)` and `.retries(n)`.
 //!
 //! # Property-based testing inside `#[test]`
 //!
